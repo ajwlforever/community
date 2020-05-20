@@ -2,8 +2,10 @@ package com.ajwlforever.community;
 
 
 import com.ajwlforever.community.dao.DiscussPostMapper;
+import com.ajwlforever.community.dao.Login_ticketMapper;
 import com.ajwlforever.community.dao.UserMapper;
 import com.ajwlforever.community.entity.DiscussPost;
+import com.ajwlforever.community.entity.LoginTicket;
 import com.ajwlforever.community.entity.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +28,10 @@ public class MapperTest {
     @Autowired(required=false)
     private DiscussPostMapper discussPortMapper;
 
+    @Autowired
+    private Login_ticketMapper login_ticketMapper;
+
+    //User selecy Test
     @Test
     public void testSelectUser() {
         User user = userMapper.selectById(101);
@@ -38,6 +44,7 @@ public class MapperTest {
         System.out.println(user);
     }
 
+    //Inset User
     @Test
     public void testInsertUser() {
         User user = new User();
@@ -53,6 +60,7 @@ public class MapperTest {
         System.out.println(user.getId());
     }
 
+    //Update User
     @Test
     public void updateUser() {
         int rows = userMapper.updateStatus(150, 1);
@@ -64,6 +72,8 @@ public class MapperTest {
         rows = userMapper.updatePassword(150, "hello");
         System.out.println(rows);
     }
+
+    //Select Posts
     @Test
     public void  testSelectPosts()
     {
@@ -75,5 +85,31 @@ public class MapperTest {
         System.out.println(list.size());
         int rows = discussPortMapper.selectDiscussPostRows(0);
         System.out.println("rows : "  + rows);
+    }
+
+    //Login_ticket
+    @Test
+    public void testInsertLogin_ticket()
+    {
+        LoginTicket loginTicket = new LoginTicket();
+        loginTicket.setId(1);
+        loginTicket.setUserId(12);
+        String s = "aakbjsdkjashdika";
+        loginTicket.setTicket(s);
+        loginTicket.setStatus(0);
+        loginTicket.setExpired(new Date(System.currentTimeMillis()+1000 * 60 * 10)); //10min
+
+        login_ticketMapper.insertLoginTicket(loginTicket);
+        LoginTicket ticket = login_ticketMapper.selectByName(s);
+        System.out.println(ticket);
+
+        login_ticketMapper.updateStatus(s,1);
+        ticket = login_ticketMapper.selectByName(s);
+        System.out.println(ticket);
+
+        login_ticketMapper.insertLoginTicket(loginTicket);
+        ticket = login_ticketMapper.selectByName(s);
+        System.out.println(ticket);
+
     }
 }

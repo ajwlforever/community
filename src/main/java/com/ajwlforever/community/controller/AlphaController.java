@@ -1,11 +1,13 @@
 package com.ajwlforever.community.controller;
 
 
+import com.ajwlforever.community.util.CommunityUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -141,5 +143,27 @@ public class AlphaController {
         return  list;
     }
 
+    @RequestMapping(path = "/index" , method = RequestMethod.GET)
+    public String index(Model model)
+    {
+        return "tempindex";
+    }
 
+
+    @RequestMapping(path = "/cookie/set",method = RequestMethod.GET)
+    @ResponseBody
+    public String setCookie(HttpServletRequest request,HttpServletResponse response)
+    {
+        Cookie cookie = new Cookie("code", CommunityUtil.generateUUID());
+        cookie.setPath("/community/alpha");
+        cookie.setMaxAge(60 * 10);
+        response.addCookie(cookie);
+        return request.getLocalAddr().toString();
+    }
+    @RequestMapping(path = "/cookie/get",method = RequestMethod.GET)
+    @ResponseBody
+    public String getCookie(@CookieValue("code") String code) {
+
+        return code;
+    }
 }

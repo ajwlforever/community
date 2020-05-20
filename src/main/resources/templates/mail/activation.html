@@ -8,12 +8,13 @@
 <body>
 	<div>
 		<p>
-			<!--/*@thymesVar id="username" type="java.lang.String"*/-->
-			<b th:text="${username}"></b>, 您好!
+			<!--/*@thymesVar id="email" type="java.lang.String"*/-->
+			<b th:text="${email}"></b>, 您好!
 		</p>
 		<p>
 			您正在注册, 这是一封激活邮件, 请点击
-			<a href="#">http://www.nowcoder.com/activation/abcdefg123456.html</a>,
+			<!--/*@thymesVar id="url" type="java.lang.String"*/-->
+			<a th:href="${url}"  >此链接</a>,
 			激活您的牛客账号!
 		</p>
 	</div>
