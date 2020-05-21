@@ -39,7 +39,7 @@ public class UserService implements ComunityConstant {
     @Autowired
     private Login_ticketMapper login_ticketMapper;
 
-
+//register check
     public Map<String,Object> register(User user)
     {
         Map<String,Object> map = new HashMap<>();
@@ -104,7 +104,7 @@ public class UserService implements ComunityConstant {
     }
 
 
-
+    //login check
     public Map<String,Object> login(String username, String password, int expiredSeconds)
     {
         // 先验证属性
@@ -156,11 +156,18 @@ public class UserService implements ComunityConstant {
             loginTicket.setExpired(new Date(System.currentTimeMillis()+expiredSeconds * 1000));
             login_ticketMapper.insertLoginTicket(loginTicket);
         }
-
+         else
+        {
+            String t = loginTicket.getTicket();
+            login_ticketMapper.updateStatus(t,0);
+            login_ticketMapper.updateExpired(t,new Date(System.currentTimeMillis()+expiredSeconds * 1000));
+        }
         map.put("ticket",loginTicket.getTicket());
 
         return map;
     }
+
+    //activation
     public int activation(int userId,String code)
     {
         User u = userMapper.selectById(userId);
@@ -180,6 +187,13 @@ public class UserService implements ComunityConstant {
     public void logout(String ticket)
     {
         login_ticketMapper.updateStatus(ticket,1);
+    }
+
+
+    public LoginTicket findLoginTicket(String ticket)
+    {
+        return login_ticketMapper.selectByName(ticket);
+
     }
     public User findUserById(int id) {
         return userMapper.selectById(id);

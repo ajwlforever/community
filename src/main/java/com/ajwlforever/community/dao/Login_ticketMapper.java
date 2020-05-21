@@ -4,6 +4,8 @@ import com.ajwlforever.community.entity.LoginTicket;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
+
 
 @Mapper
 @Repository
@@ -33,6 +35,8 @@ public interface Login_ticketMapper {
     )
     LoginTicket selectByUserID(int user_id);
 
+   @Update("update login_ticket set expired=#{expired} where ticket=#{ticket}")
+   int updateExpired(String ticket, Date expired);
 
     @Update(
             "update login_ticket set status=#{status} where ticket=#{ticket}"
