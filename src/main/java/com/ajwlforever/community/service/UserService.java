@@ -195,6 +195,9 @@ public class UserService implements ComunityConstant {
         return login_ticketMapper.selectByName(ticket);
 
     }
+
+
+
     public User findUserById(int id) {
         return userMapper.selectById(id);
     }
