@@ -27,7 +27,7 @@ public class SensitiveFilter {
     {
 
         try(
-        InputStream is = this.getClass().getClassLoader().getResourceAsStream("sensitve_words.txt");
+        InputStream is = this.getClass().getClassLoader().getResourceAsStream("sensitive_words.txt");
         BufferedReader bf = new BufferedReader(new InputStreamReader(is));
         )
         {
@@ -64,7 +64,7 @@ public class SensitiveFilter {
         }
     }
 
-    private  String filter(String text)
+    public   String filter(String text)
     {
         StringBuilder after =new StringBuilder("");
 
@@ -72,7 +72,7 @@ public class SensitiveFilter {
         TrieNode temp = root;
         int begin = 0,position = 0 ;
         //circle
-        while(position < text.length())
+        while(begin < text.length())
         {
            char c = text.charAt(position);
             //如果是符号，跳过
@@ -113,7 +113,18 @@ public class SensitiveFilter {
                 else
                 {
                     position++; //不为空，继续搜索
+                    if(position>text.length()-1)
+                    {
+                        //match过程中越界
+                        after.append(text.charAt(begin));
+                        begin++;
+                        position = begin;
+                        temp = root;
+                    }
+
                 }
+
+
         }
 
 

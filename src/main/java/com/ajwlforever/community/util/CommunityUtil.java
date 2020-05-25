@@ -1,8 +1,10 @@
 package com.ajwlforever.community.util;
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.DigestUtils;
 
+import java.util.Map;
 import java.util.UUID;
 
 public class CommunityUtil {
@@ -76,4 +78,37 @@ public class CommunityUtil {
 
     }
 
+    public static String toJsonString(int code, String msg, Map<String,Object> map)
+    {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code",code);
+        jsonObject.put("msg",msg);
+
+        if(map!=null)
+        {
+            for(String key:map.keySet())
+            {
+                jsonObject.put(key,map.get(key));
+            }
+        }
+
+        return jsonObject.toJSONString();
+    }
+
+    public static String toJsonString(int code ,String msg)
+    {
+        return  toJsonString(code,msg,null);
+    }
+    public static String toJsonString(int code  )
+    {
+        return  toJsonString(code,null,null);
+    }
+
+
+    public static void main(String[] args) {
+        int code = 0;
+        String msg = "41564654";
+        System.out.println( CommunityUtil.toJsonString(code,msg) );
+
+    }
 }
