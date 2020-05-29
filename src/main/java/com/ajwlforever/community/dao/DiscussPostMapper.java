@@ -20,4 +20,8 @@ public  interface DiscussPostMapper {
 
      //insert user_id, title, content, type(0-普通; 1-置顶;',), status(0-正常; 1-精华; 2-拉黑), create_time, comment_count, score
     int insertDiscussPost(DiscussPost post);
+
+    DiscussPost selectDiscussPostById(int id);
+
+    int updateCommentCount(int id, int commentCount);
 }

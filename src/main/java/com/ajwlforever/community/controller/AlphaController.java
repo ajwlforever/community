@@ -2,7 +2,11 @@ package com.ajwlforever.community.controller;
 
 
 import com.ajwlforever.community.util.CommunityUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -166,4 +170,7 @@ public class AlphaController {
 
         return code;
     }
+
+
+
 }

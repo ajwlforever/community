@@ -19,6 +19,10 @@ public class DiscussPostService {
     @Autowired
     private  SensitiveFilter sensitiveFilter;
 
+    int updateCommentCount(int id, int commentCount){
+        return  discussPostMapper.updateCommentCount(id,commentCount);
+    }
+    public DiscussPost selectDiscussPostById(int id){return discussPostMapper.selectDiscussPostById(id);}
     public  List<DiscussPost> selectAllDiscussPosts(int userId , int offset , int limit )
     {
       return discussPostMapper.selectAllDiscussPosts(userId, offset, limit);
