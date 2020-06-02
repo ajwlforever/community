@@ -3,9 +3,11 @@ package com.ajwlforever.community;
 
 import com.ajwlforever.community.dao.DiscussPostMapper;
 import com.ajwlforever.community.dao.Login_ticketMapper;
+import com.ajwlforever.community.dao.MessageMapper;
 import com.ajwlforever.community.dao.UserMapper;
 import com.ajwlforever.community.entity.DiscussPost;
 import com.ajwlforever.community.entity.LoginTicket;
+import com.ajwlforever.community.entity.Message;
 import com.ajwlforever.community.entity.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +32,10 @@ public class MapperTest {
 
     @Autowired
     private Login_ticketMapper login_ticketMapper;
+
+    @Autowired
+    private MessageMapper messageMapper;
+
 
     //User selecy Test
     @Test
@@ -110,6 +116,30 @@ public class MapperTest {
         login_ticketMapper.insertLoginTicket(loginTicket);
         ticket = login_ticketMapper.selectByName(s);
         System.out.println(ticket);
+
+    }
+
+
+    @Test
+    public void testSelectLetters() {
+        List<Message> list = messageMapper.selectConversations(111, 0, 20);
+        for (Message message : list) {
+            System.out.println(message);
+        }
+
+        int count = messageMapper.selectConversationCount(111);
+        System.out.println(count);
+
+        list = messageMapper.selectLetters("111_112", 0, 10);
+        for (Message message : list) {
+            System.out.println(message);
+        }
+
+        count = messageMapper.selectLetterCount("111_112");
+        System.out.println(count);
+
+        count = messageMapper.selectLetterUnreadCount(131, "111_131");
+        System.out.println(count);
 
     }
 }
