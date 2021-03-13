@@ -6,6 +6,8 @@ import com.ajwlforever.community.dao.UserMapper;
 import com.ajwlforever.community.entity.DiscussPost;
 import com.ajwlforever.community.entity.Page;
 import com.ajwlforever.community.entity.User;
+import com.ajwlforever.community.service.LikeService;
+import com.ajwlforever.community.util.HostHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,10 +33,17 @@ public class HomeController {
     @Autowired(required=false)
     private UserMapper userMapper;
 
+    @Autowired
+    private LikeService likeService;
+
+    @Autowired
+    private HostHolder hostHolder;
 
     @RequestMapping(path = "/index" , method = RequestMethod.GET)
     public String Index(Model model, Page page)
     {
+        User hostUser = hostHolder.getUser();
+
         page.setRows(discussPostMapper.selectDiscussPostRows(0));
         page.setPath("/index");
         System.out.println("row:" + page.getRows());
@@ -46,6 +55,12 @@ public class HomeController {
             {
                 Map<String,Object> map = new HashMap<>();
                 map.put("post",discussPost1);
+                //每一篇帖子的点赞数
+                long likeCount = likeService.findEntityLikeCount(1,discussPost1.getId());
+                int likeStatus = hostUser==null? 0:likeService.findEntityLikeStatus(hostUser.getId(),1,discussPost1.getId());
+                map.put("likeCount",likeCount);
+                map.put("likeStatus",likeStatus);
+
                 User user = userMapper.selectById(discussPost1.getUserId());
                 map.put("user",user);
                 discussPosts.add(map);
@@ -55,6 +70,12 @@ public class HomeController {
         }
         model.addAttribute("discussPosts",discussPosts);
         return "/index";
+    }
+
+    @RequestMapping(path = "/error" , method = RequestMethod.GET)
+    public String getErrorPage()
+    {
+        return "/error/500";
     }
 
 }

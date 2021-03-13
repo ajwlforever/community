@@ -133,7 +133,7 @@
 							<div class="text-muted font-size-12">
 								<u class="mr-3" th:text="${map.user.username}">寒江雪</u> 发布于 <b th:text="${#dates.format(map.post.createTime,'yy-MM-dd HH:mm:ss')}">2019-04-15 15:32:18</b>
 								<ul class="d-inline float-right">
-									<li class="d-inline ml-2">赞 0</li>
+									<li class="d-inline ml-2"> <b th:text="${map.likeStatus==1?'已赞':'赞'}"> 赞 </b> <i th:text="${map.likeCount}" >0</i> </li>
 									<li class="d-inline ml-2">|</li>
 									<li class="d-inline ml-2">回帖<span th:text="${map.post.commentCount}"></span></li>
 								</ul>
@@ -223,7 +223,7 @@
 		</footer>
 	</div>
 
-	<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+	<script src="https://s3.pstatp.com/cdn/expire-1-M/jquery/3.3.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
 	<script th:src="@{js/global.js}"></script>

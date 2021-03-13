@@ -21,6 +21,7 @@ public class SpringMvcConfig implements WebMvcConfigurer {
 
     @Autowired
     private LoginRequiredInterceptor loginRequiredInterceptor;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(alphaInterceptor)

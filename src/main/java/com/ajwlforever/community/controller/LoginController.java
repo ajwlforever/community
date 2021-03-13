@@ -107,11 +107,11 @@ public class LoginController implements ComunityConstant {
     }
 
 
-    //
+    //验证码
     @RequestMapping(path = "/kaptcha",method = RequestMethod.GET)
     public void getKaptcha(HttpServletResponse response, HttpSession session)
     {
-            String  text = kaptchaProducer.createText();
+         String  text = kaptchaProducer.createText();
         BufferedImage image = kaptchaProducer.createImage(text);
         //验证码存入session
         session.setAttribute("kaptcha",text);
