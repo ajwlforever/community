@@ -2,6 +2,7 @@ package com.ajwlforever.community.controller;
 
 import com.ajwlforever.community.annotation.LoginRequired;
 import com.ajwlforever.community.entity.User;
+import com.ajwlforever.community.service.LikeService;
 import com.ajwlforever.community.service.UserService;
 import com.ajwlforever.community.util.CommunityUtil;
 import com.ajwlforever.community.util.HostHolder;
@@ -42,6 +43,8 @@ public class UserController {
     @Autowired
     private HostHolder hostHolder;
 
+    @Autowired
+    private LikeService likeService;
     @RequestMapping(path = "/setting", method = RequestMethod.GET)
     @LoginRequired
     public String setting() {
@@ -124,4 +127,21 @@ public class UserController {
 
 
     }
+
+    //个人主页
+    @RequestMapping(path = "/profile/{userId}", method = RequestMethod.GET)
+    public String getProfilePage(@PathVariable("userId") int userId,  Model model)
+    {
+        User user = userService.findUserById(userId);
+        if(user==null)
+            throw new RuntimeException("该用户不存在");
+        //用户
+        model.addAttribute("user",user);
+        int likeCount = likeService.findUserLikeCount(userId);
+
+        model.addAttribute("likeCount",likeCount);
+        return "/site/profile";
+
+    }
+
 }
