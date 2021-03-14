@@ -1,4 +1,3 @@
-# community
 ## 牛客网论坛实战
 ### Redis 实现 点赞的功能
 点赞包括 1.主页显示赞 2.post页面显示赞，点赞，取消赞
@@ -199,4 +198,63 @@ redisTemplate有详细说明，本网站用opsForSet 返回 SetOperations<K,V> �
 官方api：https://docs.spring.io/spring-data/redis/docs/2.2.4.RELEASE/api/
 
 #### 3.重构点赞功能，主页显示赞
--	重构为用用户为key，记录点赞数量
+- 重构为用用户为key，记录点赞数量
+
+  新增数据格式
+
+  | key(like:user:userId)             | type | count(收到赞的数量) |
+  | --------------------------------- | ---- | ------------------- |
+  | like:user:111                     | int  | 12                  |
+  | like:user:112 (userId为112的用户) | int  | 12                  |
+  |                                   |      |                     |
+
+  LikeService 服务中对redis数据操作多次，要开启事务
+
+  ```
+    redisTemplate.execute(new SessionCallback() {
+              @Override
+              public Object execute(RedisOperations operations) throws DataAccessException {
+                  String entityLikeKey = RedisKeyUtil.getEntityLikeKey(entityType,entityId);
+                  String userLikeKey = RedisKeyUtil.getUserLikeKey(entityUserId);
+                  //查询是否已经赞过
+                  boolean isMember = operations.opsForSet().isMember(entityLikeKey, userId);
+                  operations.multi();
+                  if(isMember)
+                  {
+                  	//取消赞，和减少赞的数量
+                      operations.opsForSet().remove(entityLikeKey,userId);
+                      operations.opsForValue().decrement(userLikeKey);
+                  }else
+                  {
+                      operations.opsForSet().add(entityLikeKey,userId);
+                      operations.opsForValue().increment(userLikeKey);
+                  }
+                  return operations.exec();
+              }
+          });
+  ```
+  
+#### 实现点赞中遇到的困难
+
+ #####	 1. thymleaf th:href  的使用问题：
+
+     ```
+     现在在 community/alpha/test_a这个页面上
+     <a th:href="user"></a>  // http://localhost:8080/community/alpha/user
+     <a th:href="|user|"></a>  // http://localhost:8080/community/alpha/user
+     <a th:href="|user/${user.id}|"></a> //http://localhost:8080/community/alpha/user/1
+     <a th:href="|/user/${user.id}|"></a> //http://localhost:8080/user/1
+     <a th:href="@{user}"></a>  //http://localhost:8080/community/alpha/user
+     <a th:href="@{'user'+${user.id}}"></a> //http://localhost:8080/community/alpha/user1
+     <a th:href="@{'/user'+${user.id}}"></a>  //http://localhost:8080/community/user1
+     ```
+      
+     @{}加上了ContextPath 
+      
+     |   | 不做处理
+      
+     / 是根地址
+##### 2.redis 事务
+
+查询放在事务前，事务开启 operations.multi(),事务执行operations.exec();
+

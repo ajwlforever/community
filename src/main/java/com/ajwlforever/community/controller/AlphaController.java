@@ -1,6 +1,7 @@
 package com.ajwlforever.community.controller;
 
 
+import com.ajwlforever.community.entity.User;
 import com.ajwlforever.community.util.CommunityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -171,6 +172,14 @@ public class AlphaController {
         return code;
     }
 
+    @RequestMapping(value = "/test_a",method = RequestMethod.GET)
+    public String testA(Model model)
+    {
+        User user = new User();
+        user.setId(1);
+        model.addAttribute("user",user);
 
+        return "/site/test";
+    }
 
 }
