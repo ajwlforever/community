@@ -106,6 +106,7 @@ public class MessageController {
         }
         return userService.findUserById(id1);
     }
+
     @LoginRequired
     @RequestMapping(path = "/send",method = RequestMethod.POST)
     @ResponseBody

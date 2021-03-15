@@ -1,12 +1,124 @@
 ## 牛客网论坛实战
+
+### 一、环境的配置与项目启动
+1. 使用的是Idea这个开发环境
+
+2. start.spring.io打包开始项目
+
+- 基本的包： aspects,web,thymleaf,devtools,logback,mybatis,mysql;
+
+3. mysql安装 配置(my.ini)
+
+   ```my.ini
+   [mysql]
+   default-character-set=utf8
+   [mysqld]
+   port=3306
+   basedir=D:\AJWLFOREVER\就业\mysql-8.0.15-winx64
+   max_connections=20
+   character-set-server=utf8
+   default-storage-engine=INNODB
+   ```
+
+4. properties
+
+   ```
+   # Server Properties
+   server.port=8080
+   server.servlet.context-path=/community
+   
+   # Thymeleaf Properties
+   spring.thymeleaf.cache=false
+   
+   
+   # DataSourceProperties
+   spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+   spring.datasource.url=jdbc:mysql://localhost:3306/community?characterEncoding=utf-8&useSSL=false&serverTimezone=Hongkong&allowPublicKeyRetrieval=true
+   spring.datasource.username=root
+   spring.datasource.password=zjh5211314
+   spring.datasource.type=com.zaxxer.hikari.HikariDataSource
+   spring.datasource.hikari.maximum-pool-size=15
+   spring.datasource.hikari.minimum-idle=5
+   spring.datasource.hikari.idle-timeout=30000
+   
+   # MybatisProperties
+   mybatis.mapper-locations=classpath:mapper/*.xml
+   mybatis.type-aliases-package=com.ajwlforever.community.entity
+   mybatis.configuration.useGeneratedKeys=true
+   mybatis.configuration.mapUnderscoreToCamelCase=true
+   
+   # logger
+   logging.level.com.nowcoder.community=debug
+   logging.file=D:/AJWLFOREVER/nowcoder/logs/community.log
+   ```
+
+   
+
+5. 开始编程！
+
+### 二、版本控制工具git的使用
+
+git 使用文档：https://git-scm.com/doc
+
+1. 安装git
+
+2. 配置git
+
+   ```
+   git config --list  //显示所有git配置
+   git config  --global user.name "...."  //配置名字和邮箱
+   git config  --global user.email "...."
+   
+   //项目管理cd到项目下
+   git init  //创建git仓库
+   git status 
+   git add * //添加所有文件到仓库 暂存
+   git commit -m "test1" //提交版本为test1
+   
+   //生成密钥
+   ssh-keygen -t rsa -C "邮箱地址" //一直回车
+   在提示下找到 id_rsa.pub文件，复制其中内容，在github上创建公钥，建立连接
+   git remote add oringin ...网址...git 本地仓库与网络仓库连接 
+   git push -u origin --all //上传到GitHub
+   
+   git clone ...网址...git //克隆项目
+   git pull ... //从网络仓库拉项目
+   
+   
+   
+   ```
+
+   3. Idea 设置上配置Git路径，直接在Idea上的Vcs使用Git 方便！
+
+   
+
+### 三、Spring简单介绍
+
+实现Spring  
+
+@Autowired 自动注入 @Autowired(required="false") 没有不强求
+
+
+
+### 四、Spring MVC
+
+model+view+controller
+
+
+
+
+
+### 五、邮件功能的实现
+
 ### Redis 实现 点赞的功能
+
 点赞包括 1.主页显示赞 2.post页面显示赞，点赞，取消赞
 3.个人主页显示点赞。
 #### 1 redis在ssm中的使用
 
 redis:https://redis.io/documentation
 
-​		https://www.runoob.com/redis/redis-java.html
+菜鸟教程：https://www.runoob.com/redis/redis-java.html
 
 spring-redis官方文档：https://docs.spring.io/spring-data/data-redis/docs/2.5.x/reference/html/#preface
 

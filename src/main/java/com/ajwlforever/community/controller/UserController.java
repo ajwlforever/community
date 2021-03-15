@@ -2,9 +2,11 @@ package com.ajwlforever.community.controller;
 
 import com.ajwlforever.community.annotation.LoginRequired;
 import com.ajwlforever.community.entity.User;
+import com.ajwlforever.community.service.FollowService;
 import com.ajwlforever.community.service.LikeService;
 import com.ajwlforever.community.service.UserService;
 import com.ajwlforever.community.util.CommunityUtil;
+import com.ajwlforever.community.util.ComunityConstant;
 import com.ajwlforever.community.util.HostHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -24,7 +26,7 @@ import java.io.*;
 
 @Controller
 @RequestMapping("/user")
-public class UserController {
+public class UserController implements ComunityConstant {
 
     public static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -45,6 +47,11 @@ public class UserController {
 
     @Autowired
     private LikeService likeService;
+
+    @Autowired
+    private FollowService followService;
+
+
     @RequestMapping(path = "/setting", method = RequestMethod.GET)
     @LoginRequired
     public String setting() {
@@ -140,6 +147,18 @@ public class UserController {
         int likeCount = likeService.findUserLikeCount(userId);
 
         model.addAttribute("likeCount",likeCount);
+
+        User loginUser = hostHolder.getUser();
+        // 登录用户是否关注了这个人
+        boolean hasFollow = followService.isFollow(loginUser.getId(),ENTITY_TYPE_USER,user.getId());
+        model.addAttribute("hasFollow",hasFollow);
+        //关注的数量 关注了
+        long followeeCount = followService.getFolloweeCount(user.getId(),ENTITY_TYPE_USER);
+        model.addAttribute("followeeCount",followeeCount);
+        //粉丝的数量
+        long followerCount = followService.getFollowerCount(ENTITY_TYPE_USER,user.getId());
+        model.addAttribute("followerCount",followerCount);
+
         return "/site/profile";
 
     }
