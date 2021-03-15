@@ -1,6 +1,7 @@
 package com.ajwlforever.community.controller;
 
 import com.ajwlforever.community.annotation.LoginRequired;
+import com.ajwlforever.community.entity.Page;
 import com.ajwlforever.community.entity.User;
 import com.ajwlforever.community.service.FollowService;
 import com.ajwlforever.community.service.LikeService;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,6 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/user")
@@ -162,5 +166,45 @@ public class UserController implements ComunityConstant {
         return "/site/profile";
 
     }
+    @GetMapping("/followee/{userId}")
+    public String getFollowees(@PathVariable("userId") int userId, Page page, Model model)
+    {
+        User user = userService.findUserById(userId);
+        if(user==null)
+        {
+            throw new RuntimeException("没有该用户");
+        }
+        model.addAttribute("user",user);  //页面有用户信息
+        //设置分页
 
+        page.setLimit(5);
+        page.setRows((int)followService.getFolloweeCount(userId,ENTITY_TYPE_USER));
+        page.setPath("/user/followee/"+userId);
+
+        //关注列表
+        List<Map<String,Object>> list = followService.getFollowees(userId,page.getOffset(),page.getLimit());
+        model.addAttribute("followeeList",list);
+
+        return "/site/followee";
+    }
+    @GetMapping("/follower/{userId}")
+    public String getFollowers(@PathVariable("userId") int userId,Page page, Model model)
+    {
+        User user = userService.findUserById(userId);
+        if(user==null)
+        {
+            throw new RuntimeException("没有该用户");
+        }
+        model.addAttribute("user",user);  //页面有用户信息
+        //设置分页
+        page.setLimit(5);
+        page.setRows((int)followService.getFollowerCount(userId,ENTITY_TYPE_USER));
+        page.setPath("/user/follower/"+userId);
+
+        //关注列表
+        List<Map<String,Object>> list = followService.getFollowers(userId,page.getOffset(),page.getLimit());
+        model.addAttribute("followerList",list);
+
+        return "/site/follower";
+    }
 }

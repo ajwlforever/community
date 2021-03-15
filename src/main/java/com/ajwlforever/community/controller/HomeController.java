@@ -46,6 +46,7 @@ public class HomeController {
 
         page.setRows(discussPostMapper.selectDiscussPostRows(0));
         page.setPath("/index");
+
         System.out.println("row:" + page.getRows());
         List<DiscussPost> list = discussPostMapper.selectAllDiscussPosts(0,page.getOffset(), page.getLimit());
         List<Map<String,Object>> discussPosts = new ArrayList<>();

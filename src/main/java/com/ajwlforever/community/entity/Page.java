@@ -19,7 +19,11 @@ public class Page  {
         if(current >=1 )
         this.current = current;
     }
-
+    public void updateC()
+    {
+        if(current>getTotal())
+            current = getTotal();
+    }
     public int getLimit() {
 
         return limit;
@@ -37,6 +41,7 @@ public class Page  {
     public void setRows(int rows) {
         if (rows >= 0)
         this.rows = rows;
+        updateC();
     }
 
     public String getPath() {
