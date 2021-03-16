@@ -8,6 +8,11 @@ public class RedisKeyUtil {
     private static final String PREFIX_FOLLOWEE = "followee";
     private static final String PREFIX_FOLLOWER = "follower";
 
+    private static final String PREFIX_KAPATCH = "kaptch";
+
+    private static final String PREFIX_TICKET = "ticket";
+    private static final String PREFIX_USER = "user";
+
     //like:entity:entityType:entityId -> set(UserId)
     public static String getEntityLikeKey(int entityType,int entityId)
     {
@@ -33,4 +38,20 @@ public class RedisKeyUtil {
     {
         return  PREFIX_FOLLOWER+SPLIT+entityType+SPLIT+entityId;
     }
+
+    //验证码  kaptch:owner --> (text)
+    public static final String getKaptchKey(String owner)
+    {
+        return PREFIX_KAPATCH+SPLIT+owner;
+    }
+    //Ticket ticket:(ticket) --> set(class LoginTicket)
+    public static final String getTicketKey(String ticket)
+    {
+        return PREFIX_TICKET+SPLIT+ticket;
+    }
+    public static final String getUserKey(int userId )
+    {
+        return PREFIX_USER+SPLIT+userId;
+    }
+
 }

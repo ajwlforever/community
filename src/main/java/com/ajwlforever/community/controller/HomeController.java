@@ -39,7 +39,7 @@ public class HomeController {
     @Autowired
     private HostHolder hostHolder;
 
-    @RequestMapping(path = "/index" , method = RequestMethod.GET)
+    @RequestMapping(value = {"/","/index" }, method = RequestMethod.GET)
     public String Index(Model model, Page page)
     {
         User hostUser = hostHolder.getUser();

@@ -105,7 +105,7 @@ public class UserController implements ComunityConstant {
         userService.updateHeader(user.getId(),url);
 
 
-        return "/site/setting";
+        return "redirect:/user/setting";
     }
 
 

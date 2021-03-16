@@ -9,6 +9,7 @@ import java.util.Date;
 
 @Mapper
 @Repository
+@Deprecated
 public interface Login_ticketMapper {
 
     @Insert({

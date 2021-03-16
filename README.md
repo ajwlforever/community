@@ -292,6 +292,9 @@ public class RedisConfig {
 }
 ```
 
+#### 5.测试使用Redis
+
+com.ajwlforever.community.RedisTest
 
 #### 2.实现点赞功能
 
@@ -370,3 +373,85 @@ redisTemplate有详细说明，本网站用opsForSet 返回 SetOperations<K,V> �
 
 查询放在事务前，事务开启 operations.multi(),事务执行operations.exec();
 
+#### 4.redis扩展-关注取关，关注列表，粉丝列表
+##### 1.数据格式
+
+```
+//用户关注了哪个实体
+followee:userId:entityType   -> zset(entityId,now) 按时间排序
+```
+
+| followee key   | type | value                        |
+| -------------- | ---- | ---------------------------- |
+| followee:132:3 | int  | (111,currentSystemmills) ... |
+| followee:152:3 | int  | (132,currentSystemmills)...  |
+|                |      |                              |
+
+
+
+```
+//某个实体粉丝
+//follower:entityType:entityId  ->zset(userId,now)
+```
+
+| follower key   | type | value                        |
+| -------------- | ---- | ---------------------------- |
+| follower:3:123 | int  | (111,currentSystemmills) ... |
+| follower:3:133 | int  | (132,currentSystemmills)...  |
+|                |      |                              |
+
+#####  2.功能实现 
+
+com.ajwlforever.community.service.FollowService
+
+###  redis 优化登录模块（验证码 , 存储登录凭证，用户信息）
+
+
+
+##### 1. 验证码
+
+```
+//验证码  kaptch:owner --> (text)
+public static final String getKaptchKey(String owner)
+{
+	return PREFIX_KAPATCH+SPLIT+owner;
+}
+```
+
+#### 2.存储登录凭证
+
+//不再将LoginTicket 存放到mysql，而是放到 redis
+
+```
+//Ticket ticket:(ticket) --> set(class LoginTicket)
+public static final String getTicketKey(String ticket)
+{
+    return PREFIX_TICKET+SPLIT+ticket;
+}
+```
+
+##### 3.缓存用户信息 redis存放用户缓存
+
+页面中的用户优先从缓存取
+
+```
+// 1.优先从缓存中取值
+private User getCache(int userId) {
+    String redisKey = RedisKeyUtil.getUserKey(userId);
+    return (User) redisTemplate.opsForValue().get(redisKey);
+}
+
+// 2.取不到时初始化缓存数据
+private User initCache(int userId) {
+    User user = userMapper.selectById(userId);
+    String redisKey = RedisKeyUtil.getUserKey(userId);
+    redisTemplate.opsForValue().set(redisKey, user, 3600, TimeUnit.SECONDS);
+    return user;
+}
+
+// 3.数据变更时清除缓存数据
+private void clearCache(int userId) {
+    String redisKey = RedisKeyUtil.getUserKey(userId);
+    redisTemplate.delete(redisKey);
+}
+```
