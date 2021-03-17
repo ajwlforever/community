@@ -76,6 +76,8 @@ public class MessageController {
         page.setPath("/letter/"+conversationId);
         page.setLimit(5);
         page.setRows(messageService.findLetterCount(conversationId));
+        
+
         List<Message> letterList = messageService.findLetters(conversationId,page.getOffset(),page.getLimit());
         List<Map<String,Object>> letters = new ArrayList<>();
         if(letterList!=null)

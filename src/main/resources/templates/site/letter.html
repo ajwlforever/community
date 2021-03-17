@@ -123,7 +123,7 @@
 				<ul class="list-unstyled">
 					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative" th:each="item:${conversations}">
 						<span class="badge badge-danger" th:text="${item.unreadCount}" th:if="${item.unreadCount!=0}">3</span>
-						<a href="profile.html">
+						<a th:href="@{'/user/profile/'+${item.target.id}}">
 							<img th:src="${item.target.headerUrl}" class="mr-4 rounded-circle user-header" alt="用户头像" >
 						</a>
 						<div class="media-body">
@@ -132,7 +132,7 @@
 								<span class="float-right text-muted font-size-12"  th:text="${#dates.format(item.conversation.createTime,'yyyy-MM-dd HH:mm:ss')}">2019-04-28 14:13:25</span>
 							</h6>
 							<div>
-								<a href="letter-detail.html" th:utext="${item.conversation.content}">米粉车, 你来吧!</a>
+								<a  th:href="@{|/letter/${item.conversation.conversationId}|}"  th:utext="${item.conversation.content}">米粉车, 你来吧!</a>
 								<ul class="d-inline font-size-12 float-right">
 									<li class="d-inline ml-2"><a th:href="@{|/letter/${item.conversation.conversationId}|}" class="text-primary">共 <span th:text="${item.letterCount}"></span>条会话</a></li>
 								</ul>

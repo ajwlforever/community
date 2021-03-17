@@ -455,3 +455,105 @@ private void clearCache(int userId) {
     redisTemplate.delete(redisKey);
 }
 ```
+
+### Kafka,构建TB级异步消息系统
+
+#### 1.阻塞队列 （不采用Kafka） Kafka底层  Java自带Api
+
+- BlockingQueue 接口(在两个线程间搭建了一个桥梁，避免直接交流)
+  - 解决线程通信问题
+  - 阻塞方法：put、take
+- 生产者消费者模式
+  - 生产者：生产数据的线程
+  - 消费者  ：使用数据的线程
+- 实现类：
+  - ArrayBlockingQueue
+  - LInkedBlockingQueue
+  - PriorityBlockingQueue、SynchronousQueue、DelayQueue
+
+#### 2.kafka
+
+- 简介
+  - 分布式流媒体平台
+  - 应用：消息系统、日志收集、用户行为追踪、流式处理
+- 特点：高吞吐量、消息持久化(硬盘顺序读)、高可靠性（分布式，可搭建集群）、高扩展性
+- Kafka术语
+  - Broker（kafka服务器）、Zookeeper（用来管理集群）
+  - Topic、Partition、Offset
+  - Leader Replica、Followe Replica
+
+官网 kafka.apache.org
+
+安装: (安装的目录层级不应太深)
+
+1. ​	官网下载，开启。配置zookeeper.properties,server.properties;
+
+2. ​    开启zookeeper，  zookeeper-server-start.bat config\zookeeper.properties
+
+3. ​    开启使用kafka
+
+    - kafka-topics.bat --create --bootstrap-server localhost:9092(默认服务器) --replication-factor（副本） 1 --partitions 1 --topic  test
+
+      ```
+  kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic test
+      ```
+
+      
+
+   -  kafka-topics.bat --list  --bootstrap-server 显示所有主题
+   
+   -  kafka-console-producer.bat  --broker-list localhost:9092 --topic test
+   
+     hello world  （发送消息）
+   
+   -	另启窗口，接受消息   kafka-console-consumercd.bat  --bootstrap-server localhost:9092 --topic test --from-beginning
+
+#### 3.Spring整合kafka
+
+- 引入依赖
+
+  - spring-kafka
+
+    ```
+    <!-- https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka -->
+    <dependency>
+        <groupId>org.springframework.kafka</groupId>
+        <artifactId>spring-kafka</artifactId>
+        <version>2.6.6</version>
+    </dependency>
+    
+    ```
+
+    
+
+- 配置kafka
+
+  - 配置server、consumer
+
+    ```
+    spring.kafka.bootstrap-servers=localhost:9092
+    spring.kafka.consumer.group-id=community-consumer-group
+    spring.kafka.consumer.enable-auto-commit=true  //自动提交偏移
+    spring.kafka.consumer.auto-commit-interval=3000 //提交间隔
+    ```
+
+    
+
+- 访问kafka
+
+  - 生产者
+
+    kafkaTemplate.send(topic, data);
+
+  - 消费者
+
+    @KafkaListener(topics = {“test”})
+
+    public void handleMessage（ConsumerRecord record）{}
+
+#### 2.通知功能
+
+##### 发送系统通知
+
+- 处理事件，都封装成时间，异步并发
+
