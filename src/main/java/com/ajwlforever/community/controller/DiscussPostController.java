@@ -24,7 +24,7 @@ import java.util.*;
 
 @Controller
 @RequestMapping("/post")
-public class DiscussPostController {
+public class DiscussPostController  implements  ComunityConstant{
 
 
     @Autowired
@@ -106,7 +106,8 @@ public class DiscussPostController {
                 commentMap.put("user",userService.findUserById(comment.getUserId()));
                 // 评论的点赞 与 用户是否点赞
                 likeCount = likeService.findEntityLikeCount(2,comment.getId());
-                likeStatus = likeService.findEntityLikeStatus(user.getId(),2,comment.getId());
+                likeStatus = hostHolder.getUser() == null ? 0 :
+                        likeService.findEntityLikeStatus(hostHolder.getUser().getId(), ENTITY_TYPE_COMMENT, comment.getId());
                 commentMap.put("likeCount",likeCount);
                 commentMap.put("likeStatus",likeStatus);
 
@@ -123,8 +124,10 @@ public class DiscussPostController {
                     replycommentMap.put("target",target);
 
                     //评论de 回复
-                    likeCount = likeService.findEntityLikeCount(2,replyComent.getId());
-                    likeStatus = likeService.findEntityLikeStatus(user.getId(),2,replyComent.getId());
+                    likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_COMMENT,replyComent.getId());
+                    likeStatus = hostHolder.getUser() == null ? 0 :
+                            likeService.findEntityLikeStatus(hostHolder.getUser().getId(), ENTITY_TYPE_COMMENT, replyComent.getId());
+
                     replycommentMap.put("likeCount",likeCount);
                     replycommentMap.put("likeStatus",likeStatus);
 
@@ -141,7 +144,7 @@ public class DiscussPostController {
             }
             model.addAttribute("comments",commentViews);
         }
-        return "/site/discuss-detail.html";
+        return "/site/discuss-detail";
     }
 
 }

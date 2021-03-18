@@ -94,21 +94,27 @@ git 使用文档：https://git-scm.com/doc
 
 ### 三、Spring简单介绍
 
-实现Spring  
+[1.spring guides](https://spring.io/guides)
 
-@Autowired 自动注入 @Autowired(required="false") 没有不强求
+ [2.史上最全spring注解，没有之一](https://blog.csdn.net/weixin_39805338/article/details/80770472)
 
-
+./spring.md
 
 ### 四、Spring MVC
 
-model+view+controller
+MVC 设计不仅限于 [Java](http://c.biancheng.net/java/) Web 应用，还包括许多应用，比如前端、[PHP](http://c.biancheng.net/php/)、.NET 等语言。之所以那么做的根本原因在于解耦各个模块。
+
+MVC 是 Model、View 和 Controller 的缩写，分别代表 Web 应用程序中的 3 种职责。
+
+- 模型：用于存储数据以及处理用户请求的业务逻辑。
+- 视图：向控制器提交数据，显示模型中的数据。
+- 控制器：根据视图提出的请求判断将请求和数据交给哪个模型处理，将处理后的有关结果交给哪个视图更新显示。
+
+### 五、网站架构图
 
 
 
-
-
-### 五、邮件功能的实现
+### 六、邮件功能的实现
 
 ### Redis 实现 点赞的功能
 
@@ -495,7 +501,7 @@ private void clearCache(int userId) {
     - kafka-topics.bat --create --bootstrap-server localhost:9092(默认服务器) --replication-factor（副本） 1 --partitions 1 --topic  test
 
       ```
-  kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic test
+    kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic test
       ```
 
       
@@ -555,5 +561,17 @@ private void clearCache(int userId) {
 
 ##### 发送系统通知
 
-- 处理事件，都封装成时间，异步并发
+- 处理事件，都封装成事件，异步并发
 
+  ![image-20210318151358721](img%5Cimage-20210318151358721.png)
+
+  1. 这三者发出消息的动作形式极度相似，都是一个用户对某一个实体的操作，所以可以封装一个事件类，同时处理这三种操作。
+
+##### 显示系统通知
+-	对数据库读取，显示到视图层
+
+
+
+
+
+### 点赞，评论，关注功能的架构图

@@ -1,9 +1,12 @@
 package com.ajwlforever.community.controller;
 
 import com.ajwlforever.community.annotation.LoginRequired;
+import com.ajwlforever.community.entity.Event;
 import com.ajwlforever.community.entity.User;
+import com.ajwlforever.community.event.EventProducer;
 import com.ajwlforever.community.service.LikeService;
 import com.ajwlforever.community.util.CommunityUtil;
+import com.ajwlforever.community.util.ComunityConstant;
 import com.ajwlforever.community.util.HostHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,10 +18,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Controller
-public class LikeController {
+public class LikeController implements ComunityConstant {
 
     @Autowired
     private LikeService likeService;
+
+    @Autowired
+    private EventProducer eventProducer;
+
 
     @Autowired
     private HostHolder hostHolder;
@@ -26,7 +33,7 @@ public class LikeController {
     @RequestMapping(path = "/like",method = RequestMethod.POST)
     @ResponseBody
     @LoginRequired
-    public String like(int entityType, int entityId, int entityUserId)
+    public String like(int entityType, int entityId, int entityUserId,int postId )
     {
         User user = hostHolder.getUser();
         //点赞
@@ -37,6 +44,20 @@ public class LikeController {
         Map<String,Object> map = new HashMap<>();
         map.put("likeCount",likeCount);
         map.put("likeStatus",likeStatus);
+
+        //发送系统通知
+        if(likeStatus==1)
+        {
+            Event event = new Event();
+            event.setUserId(user.getId())
+                    .setEntityType(entityType)
+                    .setEntityUserId(entityUserId)
+                    .setEntityId(entityId)
+                    .setTopic(TOPIC_LIKE)
+                    .setData("postId",postId);
+            eventProducer.fireEvent(event);
+        }
+
 
         return CommunityUtil.toJsonString(0,null, map);
     }
